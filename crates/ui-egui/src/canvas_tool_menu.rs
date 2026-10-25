@@ -854,7 +854,7 @@ fn spec_dialog(app: &mut PhotocraftApp, command: &str, label: &str, spec: &str, 
 
 /// Photoshop's Stroke Path dialog: the brush-based tool to stroke with (painting with that tool's
 /// current options) and Simulate Pressure (#2978).
-const STROKE_PATH_SPEC: &str = r##"{"tool":"brush|pencil|eraser|backgroundEraser|cloneStamp|patternStamp|healingBrush|spotHealingBrush|historyBrush|blur|sharpen|smudge|dodge|burn|sponge|colorReplacement|mixerBrush"="brush","simulatePressure":bool=false}"##;
+const STROKE_PATH_SPEC: &str = r##"{"tool":"brush|pencil|eraser|backgroundEraser|cloneStamp|patternStamp|healingBrush|spotHealingBrush|historyBrush|artHistoryBrush|blur|sharpen|smudge|dodge|burn|sponge|colorReplacement|mixerBrush"="brush","simulatePressure":bool=false}"##;
 
 /// The Stroke Path dialog for the path `name` (Paths panel menu, Alt-click on its Stroke button).
 pub(crate) fn stroke_path_dialog(app: &mut PhotocraftApp, name: &str) {

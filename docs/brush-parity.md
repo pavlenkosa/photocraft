@@ -1,6 +1,6 @@
 # Brush and painting parity
 
-> **Last reviewed:** 2026-10-10 · **Last updated:** 2026-10-16 · **Change:** minor (named, stateful Brush Settings locks and visible keyboard focus; independent Brush Pose tilt-axis overrides; Transfer Wetness/Mix tool applicability; dragged preset tip preview; Hue Jitter amount track; Brush Settings minimum fields follow their Control; checkbox-only rows and non-destructive Smoothing switch; shaped-tip cursor follows the view; Color Replacement is a live toolbar tool; no brush-feel estimate changed; 2026-10-11: Pattern Stamp and Background Eraser draw live, TOOL-213-7) · **Target:** Adobe Photoshop 2026
+> **Last reviewed:** 2026-10-10 · **Last updated:** 2026-10-26 · **Change:** minor (Art History Brush landed (`paint.artHistoryBrush`, the toolbox is complete); earlier: named, stateful Brush Settings locks and visible keyboard focus; independent Brush Pose tilt-axis overrides; Transfer Wetness/Mix tool applicability; dragged preset tip preview; Hue Jitter amount track; Brush Settings minimum fields follow their Control; checkbox-only rows and non-destructive Smoothing switch; shaped-tip cursor follows the view; Color Replacement is a live toolbar tool; no brush-feel estimate changed; 2026-10-11: Pattern Stamp and Background Eraser draw live, TOOL-213-7) · **Target:** Adobe Photoshop 2026
 
 Painting is where Photoshop users notice differences first, so it gets its own checklist: the
 brush engine (`crates/paint/src/brush.rs`), the Brush Settings UI
@@ -96,7 +96,8 @@ tablets against Photoshop side by side.
 | Mixer Brush (Wet, Load, Mix, Flow, Sample All Layers, Current Brush Load with Load Brush and Clean Brush, automatic Load and Clean) | partial | No live result while dragging, no Alt-click loading (#2247) |
 | Clone Stamp (opacity, flow, aligned, sample, overlay) | partial | Clone Source W/H link and Alt target cursor (TOOL-213-8) |
 | Pattern Stamp (aligned, impressionist) | done | |
-| History Brush | done | Art History Brush missing |
+| History Brush | done | |
+| Art History Brush (styles, Area, Tolerance; sensor strokes from the History source) | done | `paint.artHistoryBrush` (2026-10-25): each brush dab grows a sensor stroke that follows the source's contours and paints the source colour under its own centre; Style presets set length, wander and curvature (Dab is one plain dab, Strict has no jitter); Area bounds where the sensor strokes are placed; Tolerance skips a sensor dab where the canvas has drifted further from the source (the mean colour-channel difference). Paints on release (no live stroke yet); the sensor dabs are round soft tips of the brush's hardness — shaped tips, texture and dual brush are not applied to them |
 | Spot Healing, Healing | partial | grain not matched on flat colour (#2104), "horrible in general" (#1092), stops responding after switching (#1751) |
 | Blur, Sharpen, Smudge (premultiplied, Sample All Layers, spacing) | done | BUG-207-2/3, #2171 |
 | Dodge, Burn, Sponge | done | |
@@ -118,6 +119,7 @@ tablets against Photoshop side by side.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-10-25 | minor | Art History Brush landed (`paint.artHistoryBrush`, the Y group): stylized sensor strokes from the History source with Style, Area and Tolerance; paints on release, round sensor tips only |
 | 2026-10-14 | minor | Brush Pose tilt overrides are independent end to end (#3825 partial); ABR flags, legacy JSON/commands, presets and three pixel depths covered; no readiness percentage or estimate changed |
 | 2026-10-13 | minor | Stale "missing tool" row corrected against main: Color Replacement (`paint.colorReplacement`) is a live toolbar tool; no brush-feel estimate changed |
 | 2026-10-11 | minor | Pattern Stamp and Background Eraser draw live (#3754); live retouch row now partial (Mixer Brush left) |

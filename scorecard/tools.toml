@@ -52,7 +52,14 @@ id = "TOOL-213-7"
 target = "Live stroke preview for every brush-based retouch tool"
 status = "partial"
 issue = 213
-note = "Live (canvas.rs strokes_live): Brush, Pencil, Eraser, Color Replacement, Blur, Sharpen, Smudge, Dodge, Burn, Sponge, Clone Stamp, Healing Brush, History Brush (#1026, #1040), Pattern Stamp (aligned and Impressionist) and Background Eraser (#3754); the release commits the live stroke's pixels (P32) or, for the retouch tools, the same pixels the live stroke showed (tested equal at 8 and 16 bits). Spot Healing Brush shows the area it heals as a dark overlay and heals on release, as Photoshop does. Not yet live: Mixer Brush (in PR #3627)"
+note = "Live (canvas.rs strokes_live): Brush, Pencil, Eraser, Color Replacement, Blur, Sharpen, Smudge, Dodge, Burn, Sponge, Clone Stamp, Healing Brush, History Brush (#1026, #1040), Pattern Stamp (aligned and Impressionist) and Background Eraser (#3754); the release commits the live stroke's pixels (P32) or, for the retouch tools, the same pixels the live stroke showed (tested equal at 8 and 16 bits). Spot Healing Brush shows the area it heals as a dark overlay and heals on release, as Photoshop does. Not yet live: Mixer Brush (in PR #3627); the Art History Brush also paints on release (2026-10-25, TOOL-213-18)"
+
+[[item]]
+id = "TOOL-213-18"
+target = "Art History Brush tool: stylized sensor strokes from the History source, Style presets, Area, Tolerance"
+status = "done"
+issue = 213
+note = "paint.artHistoryBrush (retouch_cmds/art_history.rs) + Tool::ArtHistoryBrush in the History Brush's Y flyout (panels.rs, key Y). Each brush dab grows a sensor stroke that follows the source's luminance contours and paints the source colour under its own centre; the eight Style presets (Tight Short/Medium/Long, Loose Medium/Long, Dab, Strict, Loose) set its length, wander and curvature (Strict follows the contour exactly and is seed-independent); Area bounds the disc the sensor strokes are placed in; Tolerance skips a sensor dab where the canvas has drifted further from the source (the mean colour-channel difference). Selection mask, transparency lock, any depth and colour model; a replay of the same points paints the same strokes (counter-based jitter). Round soft sensor tips only: shaped tips, texture and dual brush are not applied to them, and it paints on release (TOOL-213-7)"
 
 [[item]]
 id = "TOOL-213-8"
@@ -185,7 +192,7 @@ id = "TOOL-214-11"
 target = "Stroke Path dialog: pick any brush-based tool, Simulate Pressure"
 status = "done"
 issue = 214
-note = "path.stroke tool: Brush, Pencil, Eraser and every other brush-based tool (Background Eraser, Clone/Pattern Stamp, Healing/Spot Healing Brush, History Brush, Blur, Sharpen, Smudge, Dodge, Burn, Sponge, Color Replacement, Mixer Brush: their paint.* command along the path, one step) plus simulatePressure (taper both ends); Stroke Path dialog from the Pen menu, the Paths panel menu and Alt-click on its Stroke button (#2978)"
+note = "path.stroke tool: Brush, Pencil, Eraser and every other brush-based tool (Background Eraser, Clone/Pattern Stamp, Healing/Spot Healing Brush, History Brush, Art History Brush, Blur, Sharpen, Smudge, Dodge, Burn, Sponge, Color Replacement, Mixer Brush: their paint.* command along the path, one step) plus simulatePressure (taper both ends); Stroke Path dialog from the Pen menu, the Paths panel menu and Alt-click on its Stroke button (#2978)"
 
 [[item]]
 id = "TOOL-214-12"

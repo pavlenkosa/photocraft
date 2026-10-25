@@ -61,7 +61,12 @@ what an agent can't finish alone.
   scripted check there) is the only real oracle.
 
 ### G6. Missing tools
-- **Missing (1 of 68):** Art History Brush. Convert Point landed (#3204). Freeform
+- **Missing (0 of 68):** the toolbox is complete. Art History Brush landed (2026-10-25,
+  `paint.artHistoryBrush`, `Tool::ArtHistoryBrush` in the Y group): stylized sensor strokes from
+  the History panel's source with Style, Area and Tolerance (crates/engine/src/retouch_cmds/art_history.rs,
+  retouch_ui.rs options bar). It paints on release (no live stroke yet) and its sensor dabs are
+  round soft tips — shaped tips, texture and dual brush are not applied to them (docs/brush-parity.md).
+  Convert Point landed (#3204). Freeform
   Pen and Curvature Pen landed (#1054); Color Sampler landed (#1046, `view.colorSamplers.*`); Horizontal and Vertical Type Mask landed (#1055,
   `type.createSelection`); Perspective Crop landed (#1043, `image.perspectiveCrop`); Frame landed
   (#2914).

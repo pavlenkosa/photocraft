@@ -111,6 +111,18 @@ pub(crate) fn stroke_seed(points: &[[f64; 3]]) -> u64 {
     photocraft_engine::paint::rng::seed_from_bytes(first.as_bytes())
 }
 
+/// `paint.artHistoryBrush` params from the options bar (without `points` and `target`): Style,
+/// Area and Tolerance, seeded from the stroke's first point so a replay paints the same strokes.
+pub(crate) fn art_history_params(app: &PhotocraftApp, points: &[[f64; 3]]) -> Value {
+    let o = &app.ui.tool_options;
+    json!({
+        "style": o.ahb_style,
+        "area": o.ahb_area,
+        "tolerance": o.ahb_tolerance,
+        "seed": stroke_seed(points),
+    })
+}
+
 /// Finish a stroke with a retouching tool. Returns false if `tool` isn't one.
 pub fn finish_stroke(app: &mut PhotocraftApp, tool: Tool, points: &[[f64; 3]], mods: egui::Modifiers) -> bool {
     let o = app.ui.tool_options.clone();
@@ -142,6 +154,7 @@ pub fn finish_stroke(app: &mut PhotocraftApp, tool: Tool, points: &[[f64; 3]], m
             (if tool == Tool::Healing { "paint.healingBrush" } else { "paint.cloneStamp" }, p)
         }
         Tool::HistoryBrush => ("paint.historyBrush", json!({})),
+        Tool::ArtHistoryBrush => ("paint.artHistoryBrush", art_history_params(app, points)),
         Tool::Blur | Tool::Sharpen | Tool::Smudge | Tool::Dodge | Tool::Burn | Tool::Sponge => match dab_params(app, tool) {
             Some(cp) => cp,
             None => return false,
@@ -643,6 +656,26 @@ pub fn options_bar(app: &mut PhotocraftApp, ui: &mut egui::Ui, tool: Tool) -> bo
             crate::widgets::checkbox(ui, &mut o.cr_anti_alias, tl!("Anti-alias"));
         }
         Tool::HistoryBrush => opt(ui, tl!("Paints from the History panel's source state")),
+        Tool::ArtHistoryBrush => {
+            // Photoshop's options bar: Style, Area and Tolerance.
+            let styles = [
+                ("tightShort".to_string(), tl!("Tight Short")),
+                ("tightMedium".to_string(), tl!("Tight Medium")),
+                ("tightLong".to_string(), tl!("Tight Long")),
+                ("looseMedium".to_string(), tl!("Loose Medium")),
+                ("looseLong".to_string(), tl!("Loose Long")),
+                ("dab".to_string(), tl!("Dab")),
+                ("strict".to_string(), tl!("Strict")),
+                ("loose".to_string(), tl!("Loose")),
+            ];
+            crate::widgets::dropdown(ui, "art-history-style", tl!("Style:"), &mut o.ahb_style, &styles, 120.0);
+            opt(ui, tl!("Area:"));
+            crate::widgets::value_field(ui, &mut o.ahb_area, 1.0..=1500.0, "px", 62.0);
+            opt(ui, tl!("Tolerance:"));
+            crate::widgets::value_field(ui, &mut o.ahb_tolerance, 0.0..=100.0, "%", 62.0);
+            crate::widgets::vline(ui, 22.0);
+            opt(ui, tl!("Paints stylized strokes from the History panel's source state"));
+        }
         Tool::QuickSelection => {
             crate::widgets::checkbox(ui, &mut o.sample_all.quick_selection, tl!("Sample All Layers"));
             crate::widgets::checkbox(ui, &mut o.enhance_edge, tl!("Enhance Edge"));

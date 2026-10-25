@@ -176,6 +176,9 @@ pub enum Tool {
     CloneStamp,
     PatternStamp,
     HistoryBrush,
+    /// Paints stylized sensor strokes from the History panel's source state (Photoshop's
+    /// Art History Brush, the last tool of its toolbox to land here).
+    ArtHistoryBrush,
     Blur,
     Sharpen,
     Smudge,
@@ -206,7 +209,7 @@ pub enum Tool {
 }
 
 impl Tool {
-    pub const ALL: [Tool; 67] = [
+    pub const ALL: [Tool; 68] = [
         Tool::Move,
         Tool::Artboard,
         Tool::RectMarquee,
@@ -249,6 +252,7 @@ impl Tool {
         Tool::CloneStamp,
         Tool::PatternStamp,
         Tool::HistoryBrush,
+        Tool::ArtHistoryBrush,
         Tool::Blur,
         Tool::Sharpen,
         Tool::Smudge,
@@ -323,6 +327,7 @@ impl Tool {
             Tool::CloneStamp => "Clone Stamp Tool",
             Tool::PatternStamp => "Pattern Stamp Tool",
             Tool::HistoryBrush => "History Brush Tool",
+            Tool::ArtHistoryBrush => "Art History Brush Tool",
             Tool::Blur => "Blur Tool",
             Tool::Sharpen => "Sharpen Tool",
             Tool::Smudge => "Smudge Tool",
@@ -375,6 +380,7 @@ impl Tool {
                 | Tool::CloneStamp
                 | Tool::PatternStamp
                 | Tool::HistoryBrush
+                | Tool::ArtHistoryBrush
                 | Tool::Blur
                 | Tool::Sharpen
                 | Tool::Smudge
@@ -402,7 +408,7 @@ impl Tool {
             Tool::Zoom => 'Z',
             Tool::Remove | Tool::SpotHealing | Tool::Healing | Tool::Patch | Tool::ContentAwareMove | Tool::RedEye => 'J',
             Tool::CloneStamp | Tool::PatternStamp => 'S',
-            Tool::HistoryBrush => 'Y',
+            Tool::HistoryBrush | Tool::ArtHistoryBrush => 'Y',
             Tool::Blur | Tool::Sharpen | Tool::Smudge => '\0',
             // In the Marquee flyout, but M cycles only the Rectangular and Elliptical Marquee.
             Tool::SingleRowMarquee | Tool::SingleColumnMarquee => '\0',
@@ -807,6 +813,15 @@ pub struct ToolOptions {
     pub cr_limits: String,
     pub cr_tolerance: f32,
     pub cr_anti_alias: bool,
+    /// Art History Brush: stroke style (tightShort | tightMedium | tightLong | looseMedium |
+    /// looseLong | dab | strict | loose), the Area (px) the sensor strokes are placed in and the
+    /// Tolerance (%) to the source state, as `paint.artHistoryBrush` takes them.
+    #[serde(default = "default_ahb_style")]
+    pub ahb_style: String,
+    #[serde(default = "fifty")]
+    pub ahb_area: f32,
+    #[serde(default)]
+    pub ahb_tolerance: f32,
     /// Zoom tool › Scrubby Zoom: dragging left/right zooms continuously (else a zoom rectangle).
     #[serde(default = "yes")]
     pub zoom_scrubby: bool,
@@ -883,6 +898,11 @@ fn one() -> f32 {
 
 fn fifty() -> f32 {
     50.0
+}
+
+/// Photoshop's default Art History Brush style.
+fn default_ahb_style() -> String {
+    "tightMedium".into()
 }
 
 /// The session brush starts out as the Brush's (the tool the app opens with).
@@ -1041,6 +1061,9 @@ impl Default for ToolOptions {
             cr_limits: "contiguous".into(),
             cr_tolerance: 30.0,
             cr_anti_alias: true,
+            ahb_style: default_ahb_style(),
+            ahb_area: fifty(),
+            ahb_tolerance: 0.0,
             zoom_scrubby: true,
             pencil_auto_erase: false,
             brush_clear: false,
@@ -1805,7 +1828,7 @@ mod tests {
         assert!(!Tool::RedEye.is_brushlike());
         assert_eq!(Tool::from_name("patternStamp"), Some(Tool::PatternStamp));
         assert_eq!(Tool::from_name("Pattern Stamp Tool"), Some(Tool::PatternStamp));
-        assert_eq!(Tool::ALL.len(), 67);
+        assert_eq!(Tool::ALL.len(), 68);
         assert_eq!(Tool::from_name("Vertical Type Mask Tool"), Some(Tool::VerticalTypeMask));
         assert_eq!(Tool::from_name("addAnchorPoint"), Some(Tool::AddAnchorPoint));
         assert_eq!(Tool::from_name("Delete Anchor Point Tool"), Some(Tool::DeleteAnchorPoint));

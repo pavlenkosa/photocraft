@@ -202,6 +202,7 @@ pub fn option_keys(tool: Tool) -> &'static [&'static str] {
         Tool::RedEye => reset!(red_eye_pupil_size, red_eye_darken),
         Tool::CloneStamp => reset!(clone_aligned, clone_sample),
         Tool::PatternStamp => reset!(pattern_stamp_aligned, pattern_stamp_impressionist, pattern_stamp_scale, pattern_stamp_angle),
+        Tool::ArtHistoryBrush => reset!(ahb_style, ahb_area, ahb_tolerance),
         Tool::Blur | Tool::Sharpen => reset!(strength, protect_detail),
         Tool::Smudge => reset!(strength, finger_painting),
         Tool::Dodge | Tool::Burn => reset!(tone_range, exposure, protect_tones),

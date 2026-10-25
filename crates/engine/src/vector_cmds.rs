@@ -1247,6 +1247,7 @@ pub const STROKE_PATH_TOOLS: &[(&str, &str)] = &[
     ("healingBrush", "paint.healingBrush"),
     ("spotHealingBrush", "paint.spotHealing"),
     ("historyBrush", "paint.historyBrush"),
+    ("artHistoryBrush", "paint.artHistoryBrush"),
     ("blur", "paint.blur"),
     ("sharpen", "paint.sharpen"),
     ("smudge", "paint.smudge"),
@@ -1887,7 +1888,7 @@ pub fn specs() -> Vec<CommandSpec> {
             "path.stroke",
             "Stroke Path",
             [],
-            r##"{"name":str|"work"|"layer"="work","layer":id? (pixel layer),"tool":"brush|pencil|eraser|backgroundEraser|cloneStamp|patternStamp|healingBrush|spotHealingBrush|historyBrush|blur|sharpen|smudge|dodge|burn|sponge|colorReplacement|mixerBrush"="brush","simulatePressure":bool=false (taper both ends when the brush follows pen pressure),"size":0.5..5000 px?,"hardness":0..1?,"opacity":0..100?,"color":"#rrggbb"=foreground} (current brush settings otherwise; tools past the Eraser run their paint.* command along the path and take its params)"##,
+            r##"{"name":str|"work"|"layer"="work","layer":id? (pixel layer),"tool":"brush|pencil|eraser|backgroundEraser|cloneStamp|patternStamp|healingBrush|spotHealingBrush|historyBrush|artHistoryBrush|blur|sharpen|smudge|dodge|burn|sponge|colorReplacement|mixerBrush"="brush","simulatePressure":bool=false (taper both ends when the brush follows pen pressure),"size":0.5..5000 px?,"hardness":0..1?,"opacity":0..100?,"color":"#rrggbb"=foreground} (current brush settings otherwise; tools past the Eraser run their paint.* command along the path and take its params)"##,
             has_layer,
             path_stroke
         ),

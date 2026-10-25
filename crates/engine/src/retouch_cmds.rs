@@ -1,5 +1,6 @@
 //! Retouching tools as commands: Clone Stamp, Pattern Stamp, Healing Brush, Spot Healing Brush,
-//! Patch, Content-Aware Move, Remove, Dodge, Burn, Sponge, Blur, Sharpen, Smudge and History Brush.
+//! Patch, Content-Aware Move, Remove, Dodge, Burn, Sponge, Blur, Sharpen, Smudge, History Brush
+//! and Art History Brush.
 //!
 //! Every command takes a Photoshop-style brush (`points`, `size`, `hardness`, `opacity`, `flow`,
 //! `spacing`, `layer`), respects the active selection as a mask and the layer's transparency lock, and
@@ -24,6 +25,7 @@ use serde_json::{Value, json};
 use crate::commands::{CommandSpec, blend_from_str};
 use crate::{EngineError, Result, Session};
 
+mod art_history;
 mod content_aware_move;
 mod patch;
 mod pattern_stamp;
@@ -1677,6 +1679,18 @@ pub fn specs() -> Vec<CommandSpec> {
             ),
             enabled: has_pixel_layer,
             run: history_brush,
+            journal: true,
+        },
+        CommandSpec {
+            id: "paint.artHistoryBrush",
+            label: "Art History Brush",
+            menu: &[],
+            shortcut: None,
+            params: brush_params!(
+                r#","style":"tightShort|tightMedium|tightLong|looseMedium|looseLong|dab|strict|loose"="tightMedium","area":1..1500 px=50 (the disc around each dab the sensor strokes are placed in),"tolerance":0..100 %=0 (a sensor dab is skipped where the canvas has drifted further from the source),"mode":"normal|multiply|…"="normal","state":row,"snapshot":id (the source, as paint.historyBrush takes it),"seed":u64? (the jitter seed; default hashes the points) → {"damage"}"#
+            ),
+            enabled: art_history::enabled,
+            run: art_history::run,
             journal: true,
         },
     ]

@@ -676,6 +676,79 @@ fn history_brush_errors_when_layer_is_new() {
 }
 
 #[test]
+fn art_history_brush_paints_stylized_strokes_from_the_source() {
+    for depth in [8u64, 32] {
+        let mut s = session(40, 20, depth, "rgb");
+        s.execute("paint.stroke", json!({"points": [[0, 10], [40, 10]], "size": 12, "hardness": 1.0, "color": "#ff0000"})).unwrap();
+        s.execute("paint.stroke", json!({"points": [[0, 10], [40, 10]], "size": 12, "hardness": 1.0, "color": "#00ff00"})).unwrap();
+        // Tolerance 100 paints everywhere; the source is state 1 (red), so strokes of red land on
+        // the green canvas.
+        s.execute("paint.artHistoryBrush", json!({"points": [[10, 10], [30, 10]], "size": 10, "hardness": 100, "tolerance": 100, "state": 1})).unwrap();
+        let px = rgba(&s, 20, 10);
+        assert!(px[0] > 0.5 && px[1] < 0.9, "depth {depth}: strokes of the source's red were painted: {px:?}");
+        assert!(s.execute("paint.artHistoryBrush", json!({"points": [[5, 10]], "state": 99})).is_err());
+    }
+}
+
+/// The tool's Tolerance, as Adobe's help defines it: low tolerance restricts strokes to areas that
+/// vary little from the source state; high tolerance lets them spread across edited areas too.
+#[test]
+fn art_history_brush_tolerance_skips_edited_areas() {
+    let mut s = session(40, 20, 8, "rgb");
+    // The Open state is white; a blue square is edited after it.
+    s.execute("select.rect", json!({"x": 14, "y": 6, "width": 12, "height": 8})).unwrap();
+    s.execute("edit.fill", json!({"color": "#0000ff"})).unwrap();
+    s.execute("select.deselect", json!({})).unwrap();
+    // Tolerance 0: strokes repaint only what still matches the source, so the square stays blue.
+    s.execute("paint.artHistoryBrush", json!({"points": [[20, 10]], "size": 16, "hardness": 100})).unwrap();
+    assert!(rgba(&s, 20, 10)[2] > 0.9, "the edited square is untouched at tolerance 0: {:?}", rgba(&s, 20, 10));
+    // Tolerance 100: strokes spread across it, repainting the source's white over the blue.
+    s.execute("paint.artHistoryBrush", json!({"points": [[20, 10]], "size": 16, "hardness": 100, "tolerance": 100})).unwrap();
+    assert!(rgba(&s, 20, 10)[0] > 0.9, "tolerance 100 paints across the edited square: {:?}", rgba(&s, 20, 10));
+}
+
+#[test]
+fn art_history_brush_styles_change_the_strokes_and_replay_exactly() {
+    // The source is state 1 (the textured layer); a red stroke over it makes the canvas differ
+    // from the source, so the rearranged colours are visible and the seed matters.
+    let run = |style: &str, seed: u64| {
+        let mut s = session(60, 30, 8, "rgb");
+        paint_layer(&mut s, texture);
+        s.execute("paint.stroke", json!({"points": [[10, 15], [50, 15]], "size": 8, "hardness": 100, "color": "#ff0000"})).unwrap();
+        s.execute("paint.artHistoryBrush", json!({"points": [[15, 15], [45, 15]], "size": 10, "hardness": 100, "tolerance": 100, "style": style, "seed": seed, "state": 1})).unwrap();
+        (10..50).map(|x| rgba(&s, x, 15)).collect::<Vec<_>>()
+    };
+    assert_eq!(run("tightMedium", 7), run("tightMedium", 7), "the same seed replays exactly");
+    assert_ne!(run("tightMedium", 7), run("tightMedium", 8), "a different seed wanders differently");
+    assert_ne!(run("tightMedium", 7), run("tightShort", 7), "the length preset shapes the strokes");
+    assert_ne!(run("tightMedium", 7), run("looseLong", 7), "loose strokes wander further");
+    assert_ne!(run("tightMedium", 7), run("dab", 7), "a dab is one plain dab");
+    assert_eq!(run("strict", 7), run("strict", 8), "strict has no jitter to seed");
+}
+
+#[test]
+fn art_history_brush_rejects_bad_params_without_touching_the_pixels() {
+    let mut s = session(20, 20, 8, "rgb");
+    paint_layer(&mut s, texture);
+    let before = rgba(&s, 10, 10);
+    for p in [
+        json!({"points": [[5, 5]], "style": "wild"}),
+        json!({"points": [], "size": 8}),
+        json!({"points": [[0, 0], [60000, 60000]], "size": 8}),
+        json!({"points": [[5, 5]], "state": 99}),
+        json!({"points": [[5, 5]], "mode": "bogus"}),
+        json!({"points": [[5, 5], [1e300, 0]]}),
+    ] {
+        let err = s.execute("paint.artHistoryBrush", p).unwrap_err().to_string();
+        assert!(!err.is_empty(), "{err}");
+    }
+    assert_eq!(rgba(&s, 10, 10), before, "refused strokes leave the pixels alone");
+    // An ordinary stroke still paints, and the Area clamps into range instead of erroring.
+    s.execute("paint.artHistoryBrush", json!({"points": [[5, 10], [15, 10]], "size": 6, "hardness": 100, "tolerance": 100, "area": 1.0e9})).unwrap();
+    assert_ne!(rgba(&s, 10, 10), before);
+}
+
+#[test]
 fn retouch_commands_are_registered_and_need_a_pixel_layer() {
     let ids = [
         "paint.cloneStamp",
@@ -689,6 +762,7 @@ fn retouch_commands_are_registered_and_need_a_pixel_layer() {
         "paint.sharpen",
         "paint.smudge",
         "paint.historyBrush",
+        "paint.artHistoryBrush",
         "paint.remove",
     ];
     for id in ids {
@@ -706,7 +780,7 @@ fn retouch_commands_are_registered_and_need_a_pixel_layer() {
 // Paint target (#207): mask, alpha channel, Quick Mask
 // ---------------------------------------------------------------------------------------------
 
-const RETOUCH_IDS: [&str; 12] = [
+const RETOUCH_IDS: [&str; 13] = [
     "paint.cloneStamp",
     "paint.patternStamp",
     "paint.healingBrush",
@@ -718,6 +792,7 @@ const RETOUCH_IDS: [&str; 12] = [
     "paint.sharpen",
     "paint.smudge",
     "paint.historyBrush",
+    "paint.artHistoryBrush",
     "paint.remove",
 ];
 
@@ -769,6 +844,12 @@ fn retouch_params(id: &str, history_state: usize, target: Value) -> Value {
     match id {
         "paint.cloneStamp" | "paint.healingBrush" => p["offset"] = json!([-13, 3]),
         "paint.historyBrush" => p["state"] = json!(history_state),
+        // Tolerance 100: the sensor strokes paint over the whole target (the mask and channel are
+        // textured noise, which the source state does not match).
+        "paint.artHistoryBrush" => {
+            p["state"] = json!(history_state);
+            p["tolerance"] = json!(100);
+        }
         "paint.sponge" => p["mode"] = json!("saturate"),
         _ => {}
     }
@@ -1900,6 +1981,7 @@ fn retouch_strokes_refuse_absurd_point_coordinates() {
         "paint.healingBrush",
         "paint.spotHealing",
         "paint.historyBrush",
+        "paint.artHistoryBrush",
         "paint.patternStamp",
         "paint.remove",
     ];

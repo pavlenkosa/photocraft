@@ -574,6 +574,18 @@
 	Color Replacement Tool	Инструмент «Замена цвета»
 	History Brush	Кисть истории
 	Art History Brush	Кисть истории искусств
+	Art History Brush Tool	Инструмент «Кисть истории искусств»
+	Tight Short	Плотный короткий
+	Tight Medium	Плотный средний
+	Tight Long	Плотный длинный
+	Loose Medium	Свободный средний
+	Loose Long	Свободный длинный
+	Dab	Мазок
+	Strict	Строгий
+	Loose	Свободный
+	Style:	Стиль:
+	Area:	Область:
+	Paints stylized strokes from the History panel's source state	Рисует стилизованные мазки по источнику из панели «История»
 	Pattern Stamp	Узорный штамп
 	Spot Healing	Точечное восстановление
 	Red Eye	Красные глаза

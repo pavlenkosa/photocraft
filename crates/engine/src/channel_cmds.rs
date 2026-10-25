@@ -731,6 +731,7 @@ pub(crate) fn routed(id: &str) -> bool {
                 | "paint.sharpen"
                 | "paint.smudge"
                 | "paint.historyBrush"
+                | "paint.artHistoryBrush"
                 | "paint.redEye"
                 | "paint.remove"
         )
