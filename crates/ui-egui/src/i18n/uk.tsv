@@ -4133,3 +4133,15 @@ curves	Smooth	Згладити
 
 # Egui 0.37 migration controls (Aspect Ratio, Category, Color Table, Gamma, Interpolation, Profile, Target, Units, Demosaic)
 	Target	Ціль
+	Art History Brush Tool	Інструмент «Пензель історії мистецтва»
+	Tight Short	Щільний короткий
+	Tight Medium	Щільний середній
+	Tight Long	Щільний довгий
+	Loose Medium	Вільний середній
+	Loose Long	Вільний довгий
+	Dab	Мазок
+	Strict	Суворий
+	Loose	Вільний
+	Style:	Стиль:
+	Area:	Область:
+	Paints stylized strokes from the History panel's source state	Малює стилізовані мазки за джерелом із панелі «Історія»

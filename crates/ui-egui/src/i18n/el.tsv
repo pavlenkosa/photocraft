@@ -4123,3 +4123,15 @@ curves	Smooth	Εξομάλυνση
 
 # Egui 0.37 migration controls (Aspect Ratio, Category, Color Table, Gamma, Interpolation, Profile, Target, Units, Demosaic)
 	Target	Στόχος
+	Art History Brush Tool	Πινέλο ιστορίας τέχνης
+	Tight Short	Σφιχτό κοντό
+	Tight Medium	Σφιχτό μεσαίο
+	Tight Long	Σφιχτό μακρύ
+	Loose Medium	Χαλαρό μεσαίο
+	Loose Long	Χαλαρό μακρύ
+	Dab	Πινελιά
+	Strict	Αυστηρό
+	Loose	Χαλαρό
+	Style:	Στυλ:
+	Area:	Περιοχή:
+	Paints stylized strokes from the History panel's source state	Ζωγραφίζει στυλιζαρισμένες πινελιές από την πηγή του πίνακα ιστορικού

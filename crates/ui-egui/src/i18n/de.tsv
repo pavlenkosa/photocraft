@@ -3442,3 +3442,15 @@ curves	Smooth	Glätten
 	Interpolation	Interpolation
 	Target	Ziel
 	Units	Einheiten
+	Art History Brush Tool	Kunsthistorik-Pinsel-Werkzeug
+	Tight Short	Eng kurz
+	Tight Medium	Eng mittel
+	Tight Long	Eng lang
+	Loose Medium	Locker mittel
+	Loose Long	Locker lang
+	Dab	Punkt
+	Strict	Streng
+	Loose	Locker
+	Style:	Stil:
+	Area:	Bereich:
+	Paints stylized strokes from the History panel's source state	Zeichnet stilisierte Striche nach der Quelle aus dem Protokoll-Bedienfeld

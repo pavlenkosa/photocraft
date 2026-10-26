@@ -4040,3 +4040,15 @@ curves	Smooth	Wygładź
 
 # Egui 0.37 migration controls (Aspect Ratio, Category, Color Table, Gamma, Interpolation, Profile, Target, Units, Demosaic)
 	Target	Cel
+	Art History Brush Tool	Narzędzie Pędzel historii sztuki
+	Tight Short	Ciasny krótki
+	Tight Medium	Ciasny średni
+	Tight Long	Ciasny długi
+	Loose Medium	Luźny średni
+	Loose Long	Luźny długi
+	Dab	Plamka
+	Strict	Ścisły
+	Loose	Luźny
+	Style:	Styl:
+	Area:	Obszar:
+	Paints stylized strokes from the History panel's source state	Maluje stylizowane pociągnięcia według źródła z panelu Historia

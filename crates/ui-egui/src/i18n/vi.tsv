@@ -3916,3 +3916,15 @@ curves	Smooth	Làm mượt
 
 # Egui 0.37 migration controls (Aspect Ratio, Category, Color Table, Gamma, Interpolation, Profile, Target, Units, Demosaic)
 	Aspect Ratio	Tỷ lệ khung hình
+	Art History Brush Tool	Công cụ Cọ Lịch sử nghệ thuật
+	Tight Short	Chật ngắn
+	Tight Medium	Chật vừa
+	Tight Long	Chật dài
+	Loose Medium	Lỏng vừa
+	Loose Long	Lỏng dài
+	Dab	Chấm
+	Strict	Chặt
+	Loose	Lỏng
+	Style:	Kiểu:
+	Area:	Vùng:
+	Paints stylized strokes from the History panel's source state	Vẽ các nét cách điệu từ nguồn của bảng Lịch sử
