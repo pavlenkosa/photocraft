@@ -275,3 +275,7 @@ sync_github_name = false
 [people.erenova]
 display_name = "Erenova"
 sync_github_name = false
+
+[people.pavlenkosa]
+real_name = "Stepan Pavlenko"
+display_name = "Stepan Pavlenko"
