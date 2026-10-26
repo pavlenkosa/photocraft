@@ -2029,7 +2029,10 @@ mod multi_layer_formatting {
         let before = ids.map(|id| style(&app, id, 0));
         let mut h = controls(app, false);
         h.get_all_by_role(Role::ComboBox).next().unwrap().click();
-        h.run();
+        // The egui fork styles a fresh widget a frame late (theme/mod.rs) and blinks the text
+        // cursor (text_selection/visuals.rs), so opening this combobox settles after ~10 frames —
+        // past kittest's default `run()` budget of 8.
+        h.run_steps(12);
         h.get_by_role(Role::TextInput).type_text("JetBrains");
         h.key_press(egui::Key::ArrowDown);
         h.run();
